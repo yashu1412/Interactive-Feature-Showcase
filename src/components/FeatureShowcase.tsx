@@ -84,10 +84,10 @@ const FeatureShowcase: React.FC = () => {
   const featureRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const rightListRef = useRef<HTMLDivElement | null>(null);
 
-  // keep last active in a ref to avoid stale closures
+ 
   const activeRef = useRef<number>(0);
 
-  // update clock every minute
+ 
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -103,7 +103,7 @@ const FeatureShowcase: React.FC = () => {
     return () => clearInterval(id);
   }, []);
 
-  // scroll -> compute progress and active feature.
+ 
   useEffect(() => {
     let rafId: number | null = null;
 
@@ -117,12 +117,12 @@ const FeatureShowcase: React.FC = () => {
         const totalHeight = node.offsetHeight;
         const viewportHeight = window.innerHeight || 1;
         const maxScroll = Math.max(totalHeight - viewportHeight, 1);
-        // scrolled amount from top of section: clamp between 0..maxScroll
+     
         const scrolled = Math.min(Math.max(-rect.top, 0), maxScroll);
         const progress = scrolled / maxScroll;
         setScrollProgress(progress);
 
-        // convert progress to nearest feature index
+      
         const lastIndex = features.length - 1;
         const idx = Math.round(progress * lastIndex);
 
@@ -133,7 +133,7 @@ const FeatureShowcase: React.FC = () => {
       });
     };
 
-    // initialize and listen
+ 
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
@@ -145,18 +145,17 @@ const FeatureShowcase: React.FC = () => {
     };
   }, []);
 
-  // when activeFeature changes, ensure right-side list keeps the active item visible
+ 
   useEffect(() => {
     const el = featureRefs.current[activeFeature];
     const container = rightListRef.current;
     if (el && container) {
-      // smooth scroll to keep the item in view inside the right list
-      // use nearest so it doesn't jump unnecessarily
+
       el.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
     }
   }, [activeFeature]);
 
-  // keyboard navigation (left/right arrows)
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") {
@@ -167,7 +166,7 @@ const FeatureShowcase: React.FC = () => {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   // navigation helpers
@@ -175,7 +174,7 @@ const FeatureShowcase: React.FC = () => {
     const next = (activeRef.current + 1) % features.length;
     activeRef.current = next;
     setActiveFeature(next);
-    // optionally jump the page a small amount so the progress matches (not required)
+   
   };
 
   const prevFeature = () => {
@@ -187,8 +186,7 @@ const FeatureShowcase: React.FC = () => {
   const handleFeatureClick = (index: number) => {
     activeRef.current = index;
     setActiveFeature(index);
-    // if you want to push the scroll position to match the clicked feature:
-    // compute desired scroll position inside the tall section and scroll window
+
     if (sectionRef.current) {
       const node = sectionRef.current;
       const totalHeight = node.offsetHeight;
@@ -203,23 +201,21 @@ const FeatureShowcase: React.FC = () => {
     }
   };
 
-  // the active feature object (safe fallback)
   const currentFeature = features[activeFeature] ?? features[0];
 
-  // IMPORTANT: the outer container must be tall so scrolling through it maps to features.
-  // height = number_of_features * 100vh
+
   return (
     <div
       ref={sectionRef}
       className="relative"
       style={{ height: `${features.length * 100}vh` }}
     >
-      {/* Sticky viewport wrapper — this stays pinned while the tall container scrolls */}
+     
       <div className="sticky top-0 z-10 h-screen">
         <div className="max-w-7xl mx-auto px-4 h-full">
           {/* Desktop Layout */}
           <div className="hidden lg:grid lg:grid-cols-12 gap-8 items-center h-full">
-            {/* Left Side - Active Feature Content + Navigation */}
+            {/* Left Side */}
             <div className="col-span-4 space-y-6">
               <div className="transform transition-all duration-700 ease-out">
                 {/* Feature Badge */}
@@ -319,12 +315,12 @@ const FeatureShowcase: React.FC = () => {
                             <h3 className="font-bold text-slate-900 text-lg mb-2">
                               {currentFeature.title}
                             </h3>
-                            {/* Scrollable description inside phone */}
+                            
                             <div className="text-sm text-white/800 leading-relaxed max-h-28 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-transparent">
                               {currentFeature.description}
                             </div>
 
-                            {/* Progress bar */}
+                          
                             <div className="flex gap-1 mt-4">
                               {features.map((_, index) => (
                                 <div
@@ -342,7 +338,7 @@ const FeatureShowcase: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  {/* Home Indicator */}
+                  
                   <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-36 h-1 bg-white/40 rounded-full"></div>
                 </div>
               </div>
@@ -396,11 +392,11 @@ const FeatureShowcase: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
 {/* Mobile Layout */}
-<div className="lg:hidden flex flex-col justify-center space-y-8">
+<div className="lg:hidden flex flex-col justify-center space-y-6">
   {/* iPhone Mockup */}
-  <div className="flex justify-center mb-8">  
+  <div className="flex justify-center mb-2">  
     <div className="relative transform transition-all duration-700 ease-out">
       {/* iPhone Frame - Mobile Optimized */}
       <div className="relative w-56 h-[450px] bg-slate-900 rounded-[3rem] p-2 shadow-2xl">
@@ -519,6 +515,64 @@ const FeatureShowcase: React.FC = () => {
       </button>
     </div>
   </div>
+
+{/* Clickable Feature Points - Mobile */}
+<div className="px-2 mt-1">
+  <h3 className="text-lg font-semibold text-slate-800 text-center mb-2 block">
+    All Features
+  </h3>
+  <div className="max-h-[100px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-100">
+    {features.map((feature, index) => (
+      <button
+        key={feature.id}
+        onClick={() => handleFeatureClick(index)}
+        className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-300 active:scale-98 ${
+          activeFeature === index
+            ? "border-blue-500 bg-blue-50 shadow-lg"
+            : "border-slate-200 bg-white hover:border-slate-300 hover:shadow-md"
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className={`w-10 h-10 rounded-lg bg-gradient-to-r ${feature.color} flex items-center justify-center text-white shadow-md flex-shrink-0`}
+          >
+            <div className="scale-75">{feature.icon}</div>
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <h3
+              className={`font-bold text-sm mb-1 transition-colors truncate ${
+                activeFeature === index
+                  ? "text-blue-900"
+                  : "text-slate-900"
+              }`}
+            >
+              {feature.title}
+            </h3>
+            <p
+              className={`text-xs transition-colors leading-relaxed line-clamp-2 ${
+                activeFeature === index
+                  ? "text-blue-700"
+                  : "text-slate-600"
+              }`}
+            >
+              {feature.description.substring(0, 80)}...
+            </p>
+          </div>
+
+          <div
+            className={`w-2 h-2 rounded-full transition-all duration-300 flex-shrink-0 ${
+              activeFeature === index
+                ? "bg-blue-500 animate-pulse scale-100"
+                : "bg-slate-300 scale-0"
+            }`}
+          ></div>
+        </div>
+      </button>
+    ))}
+  </div>
+</div>
+
 </div>
 
         </div>
