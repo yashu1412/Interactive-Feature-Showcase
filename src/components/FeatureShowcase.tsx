@@ -451,9 +451,10 @@ const FeatureShowcase: React.FC = () => {
                   <h3 className="font-bold text-slate-900 text-sm mb-2">
                     {currentFeature.title}
                   </h3>
-                  <p className="text-xs text-slate-600 leading-relaxed line-clamp-2">
-                    {currentFeature.description.substring(0, 80)}...
+                  <p className="text-xs text-slate-600 leading-relaxed max-h-20 overflow-y-auto pr-2">
+                    {currentFeature.description}
                   </p>
+
 
                   {/* Progress Indicators */}
                   <div className="flex gap-1 mt-3">
