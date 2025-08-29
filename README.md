@@ -6,7 +6,7 @@ This project is a **Feature Showcase** application built for the **Preva Care ME
 
 ## 🚀 Live Demo
 
-**Deployed URL**: [Add your deployment URL here]
+**Deployed URL**: (https://vercel.com/yashpawaras-projects/interactive-feature-showcase)
 
 ## 📋 Task Requirements Implemented
 
